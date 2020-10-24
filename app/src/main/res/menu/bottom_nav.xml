@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Home" android:id="@+id/bottom_home"
+        android:icon="@drawable/homw">Home</item>
+    <item android:title="Cart" android:id="@+id/bottom_cart"
+        android:icon="@drawable/cart">Cart</item>
+    <item android:title="Priofile" android:id="@+id/bottom_profile"
+        android:icon="@drawable/ic_baseline_contacts_24">Profile</item>
+
+</menu>
