@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.FirebaseApp;
 
 public class MainActivity extends AppCompatActivity {
     TabLayout category;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseApp.initializeApp(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         holder=(FrameLayout)findViewById(R.id.Category);
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         nv=(NavigationView)findViewById(R.id.nv);
         View v=nv.getHeaderView(0);
         ImageButton b=(ImageButton)v.findViewById(R.id.cancel);
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -21,9 +21,9 @@ public class pageAdapter extends FragmentStatePagerAdapter {
         switch(position){
         case 0: frag= new categoryfrag();
         break;
-        case 1: frag= new vcategory_frag();
+        case 1: frag= new vcategory_frag(0);
         break;
-            case 2: frag= new vcategory_frag();
+            case 2: frag= new vcategory_frag(1);
             break;
     }
         return frag;

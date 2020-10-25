@@ -30,7 +30,7 @@
             android:id="@+id/proImg"
             android:layout_gravity="center"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/unnamed"
+
             android:scaleType="fitXY"
 
             android:background="@drawable/circle"

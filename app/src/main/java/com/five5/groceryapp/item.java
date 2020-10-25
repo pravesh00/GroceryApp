@@ -2,13 +2,41 @@ package com.five5.groceryapp;
 
 public class item {
     String name;
-    String rate;
+    int rate;
     String info;
+    String category;
+    int id;
 
-    public item(String name, String rate, String info) {
+    public item(String name, int rate, String info, String category, int id) {
         this.name = name;
         this.rate = rate;
         this.info = info;
+        this.category = category;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getName() {
@@ -19,13 +47,7 @@ public class item {
         this.name = name;
     }
 
-    public String getRate() {
-        return rate;
-    }
 
-    public void setRate(String rate) {
-        this.rate = rate;
-    }
 
     public String getInfo() {
         return info;

@@ -2,15 +2,23 @@ package com.five5.groceryapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -33,9 +41,15 @@ public class vcategory_frag extends Fragment {
     itemAdapter itemAdapte;
     ArrayList<item> items= new ArrayList<>();
     LinearLayoutManager linearLayoutManager;
-
+    DatabaseReference mRef;
+    int a;
 
     public vcategory_frag() {
+
+        // Required empty public constructor
+    }
+    public vcategory_frag(int a) {
+        this.a=a;
         // Required empty public constructor
     }
 
@@ -64,9 +78,51 @@ public class vcategory_frag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mRef = FirebaseDatabase.getInstance().getReference();
+        checkProducts(a);
 
 
 
+    }
+
+    private void checkProducts(int a) {
+        if(a==0)
+        mRef.child("Products").orderByChild("rate").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+
+                for(DataSnapshot d:snapshot.getChildren()){
+                   item n = new item(d.child("name").getValue().toString(),Integer.parseInt(d.child("rate").getValue().toString()),d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                   items.add(n);
+                }
+                itemAdapte.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        else{
+            mRef.child("Products").orderByChild("id").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    items.clear();
+
+                    for(DataSnapshot d:snapshot.getChildren()){
+                        item n = new item(d.child("name").getValue().toString(),Integer.parseInt(d.child("rate").getValue().toString()),d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                        items.add(n);
+                    }
+                    itemAdapte.notifyDataSetChanged();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -78,10 +134,10 @@ public class vcategory_frag extends Fragment {
        linearLayoutManager=new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(),2));
         itemAdapte= new itemAdapter(items,getParentFragmentManager());
-        items.add(new item("Apples","80/Kg",""));
-        items.add(new item("Banana","90/Kg",""));
-        items.add(new item("Oranges","110/Kg",""));
-        items.add(new item("Tomato","130/Kg",""));
+        items.add(new item("Apples",80,"","",1));
+        items.add(new item("Banana",90,"","",2));
+        items.add(new item("Oranges",110,"","",3));
+        items.add(new item("Tomato",130,"","",4));
         recyclerView.setAdapter(itemAdapte);
 
         return v;

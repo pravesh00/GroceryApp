@@ -71,10 +71,10 @@ public class CartFragment extends Fragment {
         recyclerView=(RecyclerView) v.findViewById(R.id.cartrecycle);
         recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
         itemAdapte= new cartAdapter(items,getParentFragmentManager());
-        items.add(new item("Apples","80/Kg",""));
-        items.add(new item("Banana","90/Kg",""));
-        items.add(new item("Oranges","110/Kg",""));
-        items.add(new item("Tomato","130/Kg",""));
+        items.add(new item("Apples",80,"","",1));
+        items.add(new item("Banana",90,"","",2));
+        items.add(new item("Oranges",110,"","",3));
+        items.add(new item("Tomato",130,"","",4));
         recyclerView.setAdapter(itemAdapte);
 
         return v;

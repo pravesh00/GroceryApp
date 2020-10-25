@@ -1,5 +1,6 @@
 package com.five5.groceryapp;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +39,17 @@ public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder
     public void onBindViewHolder(@NonNull itemViewHolder holder, int position) {
         item curr=items.get(position);
         holder.name.setText(curr.getName());
-        holder.Rate.setText(curr.getRate());
+        holder.Rate.setText("Rs. "+curr.getRate()+"/Kg");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fg.beginTransaction().replace(R.id.holder,new item_frag()).commit();
+                item_frag frag= new item_frag();
+                Bundle n = new Bundle();
+                n.putInt("itemId",curr.getId());
+                frag.setArguments(n);
+                fg.beginTransaction().replace(R.id.holder,frag).commit();
+
+
 
             }
         });

@@ -2,6 +2,8 @@ package com.five5.groceryapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -31,6 +41,8 @@ public class searchFrag extends Fragment {
     RecyclerView recyclerView;
     itemAdapter itemAdapte;
     ArrayList<item> items= new ArrayList<>();
+    DatabaseReference mRef;
+    SearchView searchView;
 
     public searchFrag() {
         // Required empty public constructor
@@ -61,6 +73,50 @@ public class searchFrag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mRef= FirebaseDatabase.getInstance().getReference();
+        loadProducts();
+
+    }
+
+    private void checkProducts(String s) {
+        Query query=mRef.child("Products").orderByChild("name").startAt(s).endAt(s+"\uf8ff");
+                query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+
+                for(DataSnapshot d:snapshot.getChildren()){
+                    item n = new item(d.child("name").getValue().toString(),Integer.parseInt(d.child("rate").getValue().toString()),d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                    items.add(n);
+                }
+                itemAdapte.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void loadProducts() {
+        mRef.child("Products").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+
+                for(DataSnapshot d:snapshot.getChildren()){
+                    item n = new item(d.child("name").getValue().toString(),Integer.parseInt(d.child("rate").getValue().toString()),d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                    items.add(n);
+                }
+                itemAdapte.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
@@ -71,18 +127,24 @@ public class searchFrag extends Fragment {
         recyclerView=(RecyclerView) v.findViewById(R.id.searchitem);
         recyclerView.setLayoutManager(new GridLayoutManager(v.getContext(),2));
         itemAdapte= new itemAdapter(items,getParentFragmentManager());
-        items.add(new item("Apples","80/Kg",""));
-        items.add(new item("Banana","90/Kg",""));
-        items.add(new item("Oranges","110/Kg",""));
-        items.add(new item("Tomato","130/Kg",""));
-        items.add(new item("Apples","80/Kg",""));
-        items.add(new item("Banana","90/Kg",""));
-        items.add(new item("Oranges","110/Kg",""));
-        items.add(new item("Tomato","130/Kg",""));
-        items.add(new item("Apples","80/Kg",""));
-        items.add(new item("Banana","90/Kg",""));
-        items.add(new item("Oranges","110/Kg",""));
-        items.add(new item("Tomato","130/Kg",""));
+        items.add(new item("Apples",80,"","",1));
+        items.add(new item("Banana",90,"","",2));
+        items.add(new item("Oranges",110,"","",3));
+        items.add(new item("Tomato",130,"","",4));
+        searchView =(SearchView)v.findViewById(R.id.searchbox);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                checkProducts(s);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                checkProducts(s);
+                return true;
+            }
+        });
         recyclerView.setAdapter(itemAdapte);
         return v;
     }

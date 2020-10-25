@@ -23,7 +23,7 @@
 
             <androidx.appcompat.widget.SearchView
                 android:layout_width="match_parent"
-                android:background="@drawable/search1"
+
                 android:layout_margin="20px"
                 android:layout_height="wrap_content"></androidx.appcompat.widget.SearchView>
             <ViewFlipper

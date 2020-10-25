@@ -2,12 +2,23 @@ package com.five5.groceryapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,11 +31,13 @@ public class item_frag extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    int id;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    Toolbar t;
+    TextView rate,iname,info;
+    DatabaseReference mRef;
 
     public item_frag() {
         // Required empty public constructor
@@ -62,6 +75,34 @@ public class item_frag extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_item_frag, container, false);
+        iname=(TextView)v.findViewById(R.id.name);
+        rate=(TextView)v.findViewById(R.id.itemrate);
+        info=(TextView)v.findViewById(R.id.info) ;
+
+        Bundle d= getArguments();
+        id= d.getInt("itemId");
+
+        setUI(id);
         return v;
+    }
+
+    private void setUI(int name) {
+        mRef=FirebaseDatabase.getInstance().getReference();
+        Query query=mRef.child("Products").orderByChild("id").equalTo(id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot d:snapshot.getChildren()){
+                    iname.setText(d.child("name").getValue().toString());
+                    info.setText(d.child("info").getValue().toString());
+                    rate.setText("Rs."+d.child("rate").getValue().toString()+"/Kg");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
