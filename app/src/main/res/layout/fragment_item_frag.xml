@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     tools:context=".item_frag">
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonaddn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

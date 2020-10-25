@@ -6,6 +6,15 @@ public class item {
     String info;
     String category;
     int id;
+    int quantity=0;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public item(String name, int rate, String info, String category, int id) {
         this.name = name;
@@ -14,6 +23,7 @@ public class item {
         this.category = category;
         this.id = id;
     }
+
 
     public int getId() {
         return id;

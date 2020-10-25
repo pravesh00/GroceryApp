@@ -17,7 +17,7 @@
 
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/addN"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10px"
@@ -32,7 +32,7 @@
             app:layout_constraintVertical_bias="0.2">></ImageButton>
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/subtract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10px"
@@ -100,6 +100,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="120"
+        android:id="@+id/total"
         android:textSize="50px"
         android:textStyle="bold"
         android:textColor="@android:color/holo_blue_dark"

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder>
 {
@@ -53,6 +61,38 @@ public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder
 
             }
         });
+        holder.add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add(curr.getId(),"email");
+            }
+        });
+
+    }
+
+    private void add(int id, String email) {
+        DatabaseReference mref= FirebaseDatabase.getInstance().getReference().child("Cart");
+        Query query =mref.child(email).orderByChild("id").equalTo(id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                    for(DataSnapshot d:snapshot.getChildren()){
+                        int n=Integer.parseInt(d.child("quantity").getValue().toString())+1;
+                        mref.child(email).child(d.getKey()).child("quantity").setValue(n);
+                    }else{
+                    HashMap<String, Integer> map=new HashMap<>();
+                    map.put("id",id);
+                    map.put("quantity",1);
+                    mref.child(email).push().setValue(map);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -66,6 +106,7 @@ public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder
         TextView name;
         TextView Rate;
         ImageButton addToCart;
+        FloatingActionButton add;
 
         public itemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -73,6 +114,7 @@ public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder
             name=(TextView) itemView.findViewById(R.id.itemName);
             Rate=(TextView) itemView.findViewById(R.id.itemRate);
             addToCart=(ImageButton) itemView.findViewById(R.id.btnAdd);
+            add=itemView.findViewById(R.id.btnAdd);
         }
     }
 }

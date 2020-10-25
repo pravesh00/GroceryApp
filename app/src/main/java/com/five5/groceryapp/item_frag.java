@@ -13,12 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,6 +41,7 @@ public class item_frag extends Fragment {
     private String mParam2;
     TextView rate,iname,info;
     DatabaseReference mRef;
+    FloatingActionButton btn;
 
     public item_frag() {
         // Required empty public constructor
@@ -68,6 +72,32 @@ public class item_frag extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+    private void add(int id, String email) {
+        DatabaseReference mref= FirebaseDatabase.getInstance().getReference().child("Cart");
+        Query query =mref.child(email).orderByChild("id").equalTo(id);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                for(DataSnapshot d:snapshot.getChildren()){
+                    int n=Integer.parseInt(d.child("quantity").getValue().toString())+1;
+                    mref.child(email).child(d.getKey()).child("quantity").setValue(n);
+                }else{
+                    HashMap<String, Integer> map=new HashMap<>();
+                    map.put("id",id);
+                    map.put("quantity",1);
+                    mref.child(email).push().setValue(map);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     @Override
@@ -78,7 +108,15 @@ public class item_frag extends Fragment {
         iname=(TextView)v.findViewById(R.id.name);
         rate=(TextView)v.findViewById(R.id.itemrate);
         info=(TextView)v.findViewById(R.id.info) ;
+        btn=(FloatingActionButton) v.findViewById(R.id.buttonaddn);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                add(id,"email");
+            }
 
+
+        });
         Bundle d= getArguments();
         id= d.getInt("itemId");
 

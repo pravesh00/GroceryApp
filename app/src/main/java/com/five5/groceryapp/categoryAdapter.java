@@ -1,11 +1,13 @@
 package com.five5.groceryapp;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,7 +40,11 @@ public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.catego
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fg.beginTransaction().replace(R.id.holder,new searchFrag()).commit();
+                searchFrag frag= new searchFrag();
+                Bundle n = new Bundle();
+                n.putString("Category",curr.getName());
+                frag.setArguments(n);
+                fg.beginTransaction().replace(R.id.holder,frag).commit();
 
             }
         });

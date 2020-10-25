@@ -2,6 +2,7 @@ package com.five5.groceryapp;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,8 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Queue;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +41,10 @@ public class CartFragment extends Fragment {
     RecyclerView recyclerView;
     cartAdapter itemAdapte;
     ArrayList<item> items= new ArrayList<>();
+    TextView tot;
+    int total=0;
+    LinearLayoutManager lm;
+    TextView clear;
 
     public CartFragment() {
         // Required empty public constructor
@@ -69,14 +83,93 @@ public class CartFragment extends Fragment {
         // Inflate the layout for this fragment
         View v= inflater.inflate(R.layout.fragment_cart, container, false);
         recyclerView=(RecyclerView) v.findViewById(R.id.cartrecycle);
-        recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(v.getContext()));
+       lm=new LinearLayoutManager(v.getContext());
         itemAdapte= new cartAdapter(items,getParentFragmentManager());
         items.add(new item("Apples",80,"","",1));
         items.add(new item("Banana",90,"","",2));
         items.add(new item("Oranges",110,"","",3));
         items.add(new item("Tomato",130,"","",4));
-        recyclerView.setAdapter(itemAdapte);
+        //recyclerView.setAdapter(itemAdapte);
+        cartIt("email");
+        tot=v.findViewById(R.id.totalCost);
+        clear=v.findViewById(R.id.textView3);
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference mref=FirebaseDatabase.getInstance().getReference();
+                mref.child("Cart").child("email").setValue(null);
+                getParentFragmentManager().beginTransaction().replace(R.id.holder,new HomeFragment()).commit();
+                total=0;
+                tot.setText("0");
+            }
+        });
+        if(items.size()>0)
+        {}
+        else{
+            tot.setText("0");
+            total=0;
+        }
+
 
         return v;
+    }
+
+    private void cartIt(String email) {
+        DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Cart").child(email);
+        mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                total=0;
+                items.clear();
+                for(DataSnapshot d:snapshot.getChildren()){
+
+                addItemtocart(Integer.parseInt(d.child("id").getValue().toString()),Integer.parseInt(d.child("quantity").getValue().toString()));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void okRecycle() {
+        recyclerView.setLayoutManager(lm);
+        recyclerView.setAdapter(itemAdapte);
+    }
+
+    private void addItemtocart(int id, int quantity) {
+        DatabaseReference mRef= FirebaseDatabase.getInstance().getReference().child("Products");
+        Query query =mRef.orderByChild("id").equalTo(id);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot d:snapshot.getChildren()){
+                    item curr = new item(d.child("name").getValue().toString(),
+                            Integer.parseInt(d.child("rate").getValue().toString()),
+                            d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                   curr.setQuantity(quantity);
+                   total=curr.getQuantity()*Integer.parseInt(d.child("rate").getValue().toString())+total;
+                   tot.setText(total+"");
+                   items.add(curr);
+                   itemAdapte.notifyDataSetChanged();
+                }
+                if(items.size()>0)
+                    okRecycle();
+                else{
+                    tot.setText("0");
+                    total=0;
+                    getParentFragmentManager().beginTransaction().replace(R.id.holder,new HomeFragment()).commit();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

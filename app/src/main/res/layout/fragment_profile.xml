@@ -52,23 +52,35 @@
                 android:layout_centerVertical="true"
                 android:gravity="left"
                 android:padding="20px">
-                <TextView
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="50px"
+                    android:id="@+id/username"
                     android:textStyle="bold"
+                    android:enabled="false"
+                    android:textColor="@android:color/black"
                     android:text="Pravesh Choudhary"
-                    android:padding="10px"></TextView>
-                <TextView
+                    android:inputType="textPersonName"
+                    android:padding="10px"></EditText>
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+91-9001551469"
-                    android:padding="10px"></TextView>
-                <TextView
+                    android:enabled="false"
+                    android:inputType="phone"
+                    android:id="@+id/phone"
+                    android:textColor="@android:color/black"
+                    android:padding="10px"></EditText>
+                <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
+                    android:inputType="textEmailAddress"
                     android:text="pravesh_c@me.iitr.ac.in"
-                    android:padding="10px"></TextView>
+                    android:id="@+id/email"
+                    android:textColor="@android:color/black"
+                    android:padding="10px"></EditText>
 
             </LinearLayout>
             <View
@@ -80,6 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/edit"
+                android:id="@+id/edit"
                 android:background="@android:color/white"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
@@ -114,6 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAlignment="center"
+                android:id="@+id/address"
                 android:padding="20px"
                 android:layout_margin="20px"
 

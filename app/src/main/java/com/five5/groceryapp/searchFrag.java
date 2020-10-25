@@ -43,6 +43,7 @@ public class searchFrag extends Fragment {
     ArrayList<item> items= new ArrayList<>();
     DatabaseReference mRef;
     SearchView searchView;
+    String p="";
 
     public searchFrag() {
         // Required empty public constructor
@@ -76,6 +77,26 @@ public class searchFrag extends Fragment {
         mRef= FirebaseDatabase.getInstance().getReference();
         loadProducts();
 
+    }
+    private void checkProductsb(String s) {
+        Query query=mRef.child("Products").orderByChild("category").startAt(s).endAt(s+"\uf8ff");
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                items.clear();
+
+                for(DataSnapshot d:snapshot.getChildren()){
+                    item n = new item(d.child("name").getValue().toString(),Integer.parseInt(d.child("rate").getValue().toString()),d.child("info").getValue().toString(),d.child("category").getValue().toString(),Integer.parseInt(d.child("id").getValue().toString()));
+                    items.add(n);
+                }
+                itemAdapte.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void checkProducts(String s) {
@@ -145,6 +166,8 @@ public class searchFrag extends Fragment {
                 return true;
             }
         });
+        p=getArguments().getString("Category");
+        checkProductsb(p);
         recyclerView.setAdapter(itemAdapte);
         return v;
     }
