@@ -33,7 +33,7 @@
 
             android:scaleType="fitXY"
 
-            android:background="@drawable/circle"
+            android:src="@drawable/hello"
             ></ImageView>
         <RelativeLayout
             android:layout_width="match_parent"

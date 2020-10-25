@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Quantity"
+            android:layout_marginTop="10px"
 
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,7 +60,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1"
+            android:text=""
             android:paddingLeft="5sp"
             android:id="@+id/counter"
             android:textStyle="bold"

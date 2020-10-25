@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -42,6 +45,8 @@ public class item_frag extends Fragment {
     TextView rate,iname,info;
     DatabaseReference mRef;
     FloatingActionButton btn;
+    Spinner spin;
+    int quantity=1;
 
     public item_frag() {
         // Required empty public constructor
@@ -87,9 +92,10 @@ public class item_frag extends Fragment {
                 }else{
                     HashMap<String, Integer> map=new HashMap<>();
                     map.put("id",id);
-                    map.put("quantity",1);
+                    map.put("quantity",quantity);
                     mref.child(email).push().setValue(map);
                 }
+                getParentFragmentManager().beginTransaction().replace(R.id.holder,new CartFragment()).commit();
             }
 
             @Override
@@ -109,6 +115,11 @@ public class item_frag extends Fragment {
         rate=(TextView)v.findViewById(R.id.itemrate);
         info=(TextView)v.findViewById(R.id.info) ;
         btn=(FloatingActionButton) v.findViewById(R.id.buttonaddn);
+        spin=v.findViewById(R.id.spinner);
+        String[] ar={"1","2","3","4","5"};
+        ArrayAdapter a= new ArrayAdapter(v.getContext(),R.layout.support_simple_spinner_dropdown_item,ar);
+        a.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        spin.setAdapter(a);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,7 +132,13 @@ public class item_frag extends Fragment {
         id= d.getInt("itemId");
 
         setUI(id);
+        quantity=spin.getSelectedItemPosition()+1;
         return v;
+    }
+
+    private void spinT(View v) {
+
+
     }
 
     private void setUI(int name) {

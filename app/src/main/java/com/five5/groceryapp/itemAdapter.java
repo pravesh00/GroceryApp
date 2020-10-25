@@ -86,6 +86,7 @@ public class itemAdapter extends RecyclerView.Adapter<itemAdapter.itemViewHolder
                     map.put("quantity",1);
                     mref.child(email).push().setValue(map);
                 }
+                fg.beginTransaction().replace(R.id.holder,new CartFragment()).commit();
             }
 
             @Override

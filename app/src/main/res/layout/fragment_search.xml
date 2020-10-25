@@ -11,6 +11,7 @@
     <androidx.appcompat.widget.SearchView
         android:layout_width="match_parent"
         android:id="@+id/searchbox"
+        android:background="@drawable/searchn"
 
         android:layout_margin="20px"
         android:layout_height="wrap_content"></androidx.appcompat.widget.SearchView>

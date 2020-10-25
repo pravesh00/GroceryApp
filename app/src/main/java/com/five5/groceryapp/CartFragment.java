@@ -1,5 +1,6 @@
 package com.five5.groceryapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -90,6 +92,15 @@ public class CartFragment extends Fragment {
         items.add(new item("Banana",90,"","",2));
         items.add(new item("Oranges",110,"","",3));
         items.add(new item("Tomato",130,"","",4));
+        Button btn=v.findViewById(R.id.checkout);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(v.getContext(),checkout.class));
+            }
+        });
+
+
         //recyclerView.setAdapter(itemAdapte);
         cartIt("email");
         tot=v.findViewById(R.id.totalCost);
